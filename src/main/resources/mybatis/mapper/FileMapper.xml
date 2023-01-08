@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MyDisk.project.mapper.FileMapper">
+
+    <sql id="field">
+        file_id,file_store_id,file_name,file_type,file_size,create_time,recycle, recycle_time
+    </sql>
+
+    <insert id="insertFile" useGeneratedKeys="true">
+        insert into file(file_id,file_store_id,file_name,file_type,file_size,create_time,recycle, recycle_time)
+        values (null, #{fileStoreId},#{fileName},#{fileType},#{fileSize},#{createTime},#{recycle}, #{recycleTime})
+    </insert>
+
+    <update id="updateRecycle">
+        update file set recycle = #{recycle}
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteFile">
+        delete from file where file_id = #{fileId}
+    </delete>
+
+    <update id="updateFileName">
+        update file set file_name = #{fileName}
+        where file_id = #{fileId}
+    </update>
+
+    <select id="queryByFileStoreIdAndRecycle" resultType="com.MyDisk.project.entity.File">
+        select <include refid="field"></include> from file where file_store_id = #{fileStoreId} and recycle = #{recycle}
+    </select>
+
+    <select id="queryFilesByFileStoreId" resultType="com.MyDisk.project.entity.File">
+        select <include refid="field"></include> from file where file_store_id = #{fileStoreId}
+    </select>
+
+    <select id="queryById" resultType="com.MyDisk.project.entity.File">
+        select <include refid="field"></include> from file where file_id = #{fileId}
+    </select>
+
+    <select id="queryFileIdByFileName" resultType="java.lang.Integer">
+        select file_id from file where file_name = #{fileName}
+    </select>
+
+    <update id="updateRecycleByFileIdAndFileStoreId">
+        update file set recycle=#{recycle} where file_id=#{fileId} and file_store_id=#{fileStoreId}
+    </update>
+
+    <update id="deleteFileByFileIdAndFileStoreId">
+        update file set recycle=#{recycle}, recycle_time=#{recycleTime}
+            where file_id=#{fileId} and file_store_id=#{fileStoreId}
+    </update>
+
+    <update id="updateFileNameByFileIdAndFileStoreId">
+        update file set file_name = #{fileName} where file_id=#{fileId} and file_store_id=#{fileStoreId}
+    </update>
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MyDisk.project.mapper.UserMapper">
+
+
+    <!--添加语句的字段列表-->
+    <sql id="insertColumn">
+        <if test="fileStoreId != null">
+            file_store_id,
+        </if>
+        <if test="userName != null and userName != ''">
+            user_name,
+        </if>
+        <if test="email != null and email != ''">
+            email,
+        </if>
+        <if test="password != null and password != ''">
+            password,
+        </if>
+        <if test="registerTime != null">
+            register_time,
+        </if>
+        <if test="imagePath != null and imagePath != ''">
+            image_path,
+        </if>
+
+
+    </sql>
+
+    <!--添加语句的值列表-->
+    <sql id="insertValue">
+        <if test="fileStoreId != null">
+            #{fileStoreId},
+        </if>
+        <if test="userName != null and userName != ''">
+            #{userName},
+        </if>
+        <if test="email != null and email != ''">
+            #{email},
+        </if>
+        <if test="password != null and password != ''">
+            #{password},
+        </if>
+        <if test="registerTime != null">
+            #{registerTime},
+        </if>
+        <if test="imagePath != null and imagePath != ''">
+            #{imagePath},
+        </if>
+    </sql>
+
+    <!--通用对User各个属性的值的非空判断-->
+    <sql id="commonsValue">
+        <if test="fileStoreId != null">
+            file_store_id = #{fileStoreId},
+        </if>
+        <if test="userName != null and userName != ''">
+            user_name = #{userName},
+        </if>
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="registerTime != null">
+            register_time = #{registerTime},
+        </if>
+        <if test="imagePath != null and imagePath != ''">
+            image_path = #{imagePath},
+        </if>
+        <if test="role != null">
+            role = #{role},
+        </if>
+        <if test="birthday != null">
+            birthday = #{birthday},
+        </if>
+        <if test="sex != null and sex != ''">
+            sex = #{sex},
+        </if>
+        <if test="myPage != null and myPage != ''">
+            my_page = #{myPage},
+        </if>
+        <if test="phone != null and phone != ''">
+            phone = #{phone},
+        </if>
+        <if test="other != null and other != ''">
+            other = #{other}
+        </if>
+    </sql>
+
+    <sql id="allColumn">
+        user_id, file_store_id, user_name, email, password, register_time, image_path, role, birthday, sex, my_page, phone, other
+    </sql>
+
+    <!--查询单个user-->
+    <select id="queryById" resultType="com.MyDisk.project.entity.User">
+        select <include refid="allColumn"></include>
+        from user
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <include refid="insertColumn"/>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <include refid="insertValue"/>
+        </trim>
+    </insert>
+
+    <delete id="deleteById">
+        delete from user where user_id = #{userId}
+    </delete>
+
+    <select id="queryByEmailAndPwd" resultType="com.MyDisk.project.entity.User">
+        select <include refid="allColumn"></include>
+        from user
+        where email = #{email} and password = #{password}
+    </select>
+
+    <select id="getUserByEmail" resultType="com.MyDisk.project.entity.User">
+        select <include refid="allColumn"></include>
+        from user
+        where email = #{email}
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultType="com.MyDisk.project.entity.User">
+        select
+        <include refid="allColumn"></include>
+        from user
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsValue"></include>
+        </trim>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update user
+        <set>
+            <include refid="commonsValue"></include>
+        </set>
+        <where>
+            user_id = #{userId}
+        </where>
+    </update>
+
+    <select id="getUsersCount" resultType="java.lang.Integer">
+        select count(*) from user;
+    </select>
+
+    <select id="queryFileStoreIdByUserId" resultType="java.lang.Integer">
+        select file_store_id from user where user_id = #{userId}
+    </select>
+
+    <select id="queryUserIdByUserName" resultType="java.lang.Integer">
+        select user_id from user where user_name = #{username};
+    </select>
+
+    <update id="updatePdByUserId">
+        update user set password=#{password} where user_id = #{userId}
+    </update>
+
+    <update id="updateFileStoreIdByUserId">
+        update user set file_store_id = #{fileStoreId} where user_id = #{userId}
+    </update>
+
+</mapper>

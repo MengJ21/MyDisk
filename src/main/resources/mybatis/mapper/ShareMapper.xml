@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MyDisk.project.mapper.ShareMapper">
+
+    <sql id="field">
+        user_id, file_id, shared_user_id, share_time, `like`, `like_time`
+    </sql>
+
+    <insert id="insertShare" useGeneratedKeys="true">
+        insert into share(user_id, file_id, shared_user_id, share_time, `like`, `like_time`)
+        values (#{userId}, #{fileId}, #{sharedUserId}, #{shareTime}, #{like}, #{likeTime})
+    </insert>
+
+    <delete id="deleteShare">
+        delete from share where id = #{id}
+    </delete>
+
+    <select id="queryBySharedUserIdAndLike" resultType="com.MyDisk.project.entity.Share">
+        select <include refid="field"></include> from share where shared_user_id = #{sharedUserId} and `like`=#{like}
+    </select>
+
+    <select id="queryBySharedUserId" resultType="com.MyDisk.project.entity.Share">
+        select <include refid="field"></include> from share where shared_user_id = #{sharedUserId}
+    </select>
+
+    <select id="queryByUserId" resultType="com.MyDisk.project.entity.Share">
+        select <include refid="field"></include> from share where user_id = #{userId}
+    </select>
+
+    <delete id="deleteShareByUserIdAndFileId">
+        delete from share where user_id=#{userId} and file_id=#{fileId} and shared_user_id = #{sharedUserId}
+    </delete>
+
+    <update id="updateLikeAndLikeTimeBy3Param">
+        update share set `like`=#{like}, like_time=#{likeTime} where
+         user_id=#{userId} and file_id=#{fileId} and shared_user_id = #{sharedUserId}
+    </update>
+    
+</mapper>
